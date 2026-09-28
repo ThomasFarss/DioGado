@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dio é gado?</title>
+<style>
+  :root{
+    --sky-top:#ffd9a0;
+    --sky-bottom:#ffb37a;
+    --grass:#7cb342;
+    --grass-dark:#558b2f;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;
+    padding:0;
+    height:100%;
+    overflow:hidden;
+    font-family:'Segoe UI', Tahoma, sans-serif;
+  }
+  body{
+    background:linear-gradient(to bottom, var(--sky-top) 0%, var(--sky-bottom) 55%, var(--grass) 55%, var(--grass-dark) 100%);
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  /* nuvens */
+  .cloud{
+    position:absolute;
+    background:rgba(255,255,255,0.85);
+    border-radius:50px;
+    filter:blur(1px);
+    animation:drift linear infinite;
+  }
+  .cloud::before, .cloud::after{
+    content:"";
+    position:absolute;
+    background:rgba(255,255,255,0.85);
+    border-radius:50%;
+  }
+  @keyframes drift{
+    from{transform:translateX(-150px);}
+    to{transform:translateX(110vw);}
+  }
+
+  /* boi */
+  .cow{
+    position:absolute;
+    width:90px;
+    height:60px;
+    animation:walk linear infinite;
+    z-index:1;
+  }
+  .cow-body{
+    position:relative;
+    width:100%;
+    height:100%;
+  }
+  .cow-blob{
+    position:absolute;
+    width:70px;
+    height:42px;
+    background:#fff;
+    border-radius:45% 45% 40% 40%;
+    left:10px;
+    top:10px;
+    box-shadow: inset -8px -6px 0 rgba(0,0,0,0.05);
+  }
+  .spot{
+    position:absolute;
+    background:#2b2b2b;
+    border-radius:50%;
+  }
+  .cow-head{
+    position:absolute;
+    width:26px;
+    height:24px;
+    background:#fff;
+    border-radius:50% 50% 45% 45%;
+    left:-14px;
+    top:14px;
+    border:2px solid #2b2b2b22;
+  }
+  .cow-head::before{ /* focinho */
+    content:"";
+    position:absolute;
+    width:16px;
+    height:12px;
+    background:#f7c1c9;
+    border-radius:50%;
+    left:-6px;
+    top:10px;
+  }
+  .cow-ear{
+    position:absolute;
+    width:10px;
+    height:6px;
+    background:#2b2b2b;
+    border-radius:50%;
+    top:8px;
+  }
+  .cow-ear.l{left:-16px;}
+  .cow-ear.r{left:6px;}
+  .cow-horn{
+    position:absolute;
+    width:5px;
+    height:8px;
+    background:#e0d3b8;
+    border-radius:2px;
+    top:2px;
+  }
+  .cow-horn.l{left:-6px; transform:rotate(-20deg);}
+  .cow-horn.r{left:4px; transform:rotate(20deg);}
+  .cow-eye{
+    position:absolute;
+    width:3px;height:3px;
+    background:#111;
+    border-radius:50%;
+    top:16px;
+    left:-2px;
+  }
+  .cow-leg{
+    position:absolute;
+    width:6px;
+    height:18px;
+    background:#2b2b2b;
+    bottom:-14px;
+    border-radius:2px;
+    animation:legmove 0.5s ease-in-out infinite alternate;
+  }
+  .cow-leg.l1{left:16px;}
+  .cow-leg.l2{left:30px; animation-delay:0.25s;}
+  .cow-leg.l3{left:50px; animation-delay:0.1s;}
+  .cow-leg.l4{left:64px; animation-delay:0.35s;}
+  @keyframes legmove{
+    from{transform:rotate(-12deg);}
+    to{transform:rotate(12deg);}
+  }
+  .cow-tail{
+    position:absolute;
+    width:3px;
+    height:16px;
+    background:#2b2b2b;
+    right:6px;
+    top:16px;
+    border-radius:2px;
+    transform-origin:top center;
+    animation:tailwag 0.6s ease-in-out infinite alternate;
+  }
+  @keyframes tailwag{
+    from{transform:rotate(-10deg);}
+    to{transform:rotate(15deg);}
+  }
+  @keyframes walk{
+    from{transform:translateX(-140px) scaleX(1);}
+    50.01%{transform:translateX(105vw) scaleX(1);}
+    50.02%{transform:translateX(105vw) scaleX(-1);}
+    to{transform:translateX(-140px) scaleX(-1);}
+  }
+  .cow.reverse{
+    animation-direction:alternate;
+  }
+
+  /* grama detalhes */
+  .grass-tuft{
+    position:absolute;
+    bottom:0;
+    width:14px;
+    height:22px;
+    background:var(--grass-dark);
+    border-radius:50% 50% 0 0;
+  }
+
+  /* card central */
+  .card{
+    position:relative;
+    z-index:10;
+    background:rgba(255,255,255,0.95);
+    border-radius:24px;
+    padding:40px 50px;
+    text-align:center;
+    box-shadow:0 20px 50px rgba(0,0,0,0.25);
+    max-width:90vw;
+  }
+  .card h1{
+    margin:0 0 30px 0;
+    font-size:clamp(24px, 4vw, 38px);
+    color:#3e2723;
+  }
+  .card h1 span{
+    color:#c0392b;
+  }
+  .btn-row{
+    display:flex;
+    gap:30px;
+    justify-content:center;
+    align-items:center;
+    position:relative;
+    min-height:70px;
+  }
+  button{
+    font-size:20px;
+    font-weight:bold;
+    padding:14px 36px;
+    border:none;
+    border-radius:14px;
+    cursor:pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  #simBtn{
+    background:#43a047;
+    color:white;
+    box-shadow:0 6px 0 #2e7031;
+  }
+  #simBtn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 0 #2e7031;
+  }
+  #simBtn:active{
+    transform:translateY(4px);
+    box-shadow:0 2px 0 #2e7031;
+  }
+  #naoBtn{
+    background:#e53935;
+    color:white;
+    box-shadow:0 6px 0 #9d1c1c;
+    position:relative;
+  }
+
+  /* popup */
+  .overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.55);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+  }
+  .overlay.show{
+    display:flex;
+  }
+  .popup{
+    background:white;
+    padding:40px 50px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,0.4);
+    animation:pop 0.35s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes pop{
+    from{transform:scale(0.5); opacity:0;}
+    to{transform:scale(1); opacity:1;}
+  }
+  .popup p{
+    font-size:24px;
+    font-weight:bold;
+    color:#2e7031;
+    margin:0 0 20px 0;
+  }
+  .popup button{
+    background:#43a047;
+    color:white;
+    box-shadow:0 5px 0 #2e7031;
+  }
+</style>
+</head>
+<body>
+
+  <div id="scene"></div>
+
+  <div class="card">
+    <h1>Dio é realmente <span>gado</span>?</h1>
+    <div class="btn-row">
+      <button id="simBtn">Sim</button>
+      <button id="naoBtn">Não</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="popup">
+      <p>Ainda bem que sabe ...</p>
+      <button id="closeBtn">Fechar</button>
+    </div>
+  </div>
+
+<script>
+  const scene = document.getElementById('scene');
+
+  // gerar bois
+  const spotConfigs = [
+    [{w:22,h:16,l:5,t:2},{w:16,h:12,l:35,t:20},{w:14,h:10,l:2,t:22}],
+    [{w:18,h:14,l:15,t:5},{w:20,h:16,l:40,t:10}],
+    [{w:26,h:18,l:8,t:10},{w:14,h:10,l:44,t:4}],
+  ];
+
+  function createCow(top, duration, delay, scale, reverse){
+    const cow = document.createElement('div');
+    cow.className = 'cow' + (reverse ? ' reverse' : '');
+    cow.style.top = top + '%';
+    cow.style.transform = `scale(${scale})`;
+    cow.style.animationDuration = duration + 's';
+    cow.style.animationDelay = delay + 's';
+
+    const spots = spotConfigs[Math.floor(Math.random()*spotConfigs.length)]
+      .map(s => `<div class="spot" style="width:${s.w}px;height:${s.h}px;left:${s.l}px;top:${s.t}px;"></div>`)
+      .join('');
+
+    cow.innerHTML = `
+      <div class="cow-body">
+        <div class="cow-tail"></div>
+        <div class="cow-leg l1"></div>
+        <div class="cow-leg l2"></div>
+        <div class="cow-leg l3"></div>
+        <div class="cow-leg l4"></div>
+        <div class="cow-blob">${spots}</div>
+        <div class="cow-head">
+          <div class="cow-horn l"></div>
+          <div class="cow-horn r"></div>
+          <div class="cow-ear l"></div>
+          <div class="cow-ear r"></div>
+          <div class="cow-eye"></div>
+        </div>
+      </div>
+    `;
+    scene.appendChild(cow);
+  }
+
+  const cowSpots = [58, 65, 72, 80, 88];
+  for(let i=0;i<9;i++){
+    const top = cowSpots[i % cowSpots.length] + (Math.random()*4 - 2);
+    const duration = 14 + Math.random()*10;
+    const delay = -Math.random()*duration;
+    const scale = 0.7 + Math.random()*0.6;
+    createCow(top, duration, delay, scale, Math.random() > 0.5);
+  }
+
+  // nuvens
+  function createCloud(top, width, duration, delay){
+    const c = document.createElement('div');
+    c.className = 'cloud';
+    c.style.top = top + '%';
+    c.style.width = width + 'px';
+    c.style.height = (width*0.4) + 'px';
+    c.style.animationDuration = duration + 's';
+    c.style.animationDelay = delay + 's';
+    scene.appendChild(c);
+  }
+  for(let i=0;i<5;i++){
+    createCloud(5 + Math.random()*35, 80 + Math.random()*80, 40 + Math.random()*30, -Math.random()*40);
+  }
+
+  // tufos de grama
+  for(let i=0;i<40;i++){
+    const t = document.createElement('div');
+    t.className = 'grass-tuft';
+    t.style.left = (Math.random()*100) + '%';
+    t.style.height = (14 + Math.random()*16) + 'px';
+    scene.appendChild(t);
+  }
+
+  // botão "Não" foge do mouse
+  const naoBtn = document.getElementById('naoBtn');
+  const simBtn = document.getElementById('simBtn');
+  const btnRow = document.querySelector('.btn-row');
+
+  function dodge(e){
+    const rowRect = btnRow.getBoundingClientRect();
+    const btnRect = naoBtn.getBoundingClientRect();
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
+
+    const btnCenterX = btnRect.left + btnRect.width/2;
+    const btnCenterY = btnRect.top + btnRect.height/2;
+    const dist = Math.hypot(mouseX - btnCenterX, mouseY - btnCenterY);
+
+    if(dist < 90){
+      const maxX = rowRect.width - btnRect.width - 10;
+      const maxY = 200;
+      const newX = (Math.random() - 0.5) * 2 * (maxX/2);
+      const newY = (Math.random() - 0.5) * 2 * maxY;
+      naoBtn.style.position = 'relative';
+      naoBtn.style.left = newX + 'px';
+      naoBtn.style.top = newY + 'px';
+    }
+  }
+
+  document.addEventListener('mousemove', dodge);
+  naoBtn.addEventListener('mouseover', dodge);
+  naoBtn.addEventListener('touchstart', function(e){
+    e.preventDefault();
+    const newX = (Math.random() - 0.5) * 200;
+    const newY = (Math.random() - 0.5) * 200;
+    naoBtn.style.position = 'relative';
+    naoBtn.style.left = newX + 'px';
+    naoBtn.style.top = newY + 'px';
+  });
+
+  // popup ao clicar em Sim
+  const overlay = document.getElementById('overlay');
+  simBtn.addEventListener('click', () => {
+    overlay.classList.add('show');
+  });
+  document.getElementById('closeBtn').addEventListener('click', () => {
+    overlay.classList.remove('show');
+  });
+</script>
+</body>
+</html>
