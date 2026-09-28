@@ -4,12 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dio é gado?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --sky-top:#ffd9a0;
-    --sky-bottom:#ffb37a;
-    --grass:#7cb342;
-    --grass-dark:#558b2f;
+    --sky-top:#ffcf8a;
+    --sky-mid:#ffb37a;
+    --sky-horizon:#ffdca6;
+    --grass:#8bc24a;
+    --grass-dark:#4f8a2f;
+    --grass-deep:#3f7226;
+    --wood:#8a5a34;
+    --wood-dark:#6b4423;
   }
   *{box-sizing:border-box;}
   html,body{
@@ -17,14 +24,54 @@
     padding:0;
     height:100%;
     overflow:hidden;
-    font-family:'Segoe UI', Tahoma, sans-serif;
+    font-family:'Nunito', 'Segoe UI', Tahoma, sans-serif;
   }
   body{
-    background:linear-gradient(to bottom, var(--sky-top) 0%, var(--sky-bottom) 55%, var(--grass) 55%, var(--grass-dark) 100%);
+    background:linear-gradient(to bottom,
+      var(--sky-top) 0%,
+      var(--sky-mid) 38%,
+      var(--sky-horizon) 54%,
+      var(--grass) 56%,
+      var(--grass-dark) 82%,
+      var(--grass-deep) 100%);
     position:relative;
     display:flex;
     align-items:center;
     justify-content:center;
+  }
+
+  /* colinas ao fundo para dar profundidade */
+  .hill{
+    position:absolute;
+    left:-10%;
+    width:120%;
+    border-radius:50%;
+    background:var(--grass-dark);
+    opacity:0.55;
+  }
+  .hill.h1{ top:52%; height:80px; }
+  .hill.h2{ top:56%; height:70px; background:var(--grass-deep); opacity:0.4; }
+
+  /* cerca de madeira */
+  .fence{
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:46px;
+    display:flex;
+    justify-content:space-around;
+    align-items:flex-end;
+    z-index:1;
+    opacity:0.85;
+    pointer-events:none;
+  }
+  .fence-post{
+    width:8px;
+    height:40px;
+    background:linear-gradient(to bottom, var(--wood), var(--wood-dark));
+    border-radius:2px 2px 0 0;
+    box-shadow:0 4px 6px rgba(0,0,0,0.2);
   }
 
   /* nuvens */
@@ -47,21 +94,39 @@
   }
 
   /* sol */
-  .sun{
+  .sun-wrap{
     position:absolute;
     top:6%;
     right:8%;
-    width:70px;
-    height:70px;
+    width:90px;
+    height:90px;
+    z-index:0;
+  }
+  .sun-rays{
+    position:absolute;
+    inset:0;
+    background:repeating-conic-gradient(from 0deg, rgba(255,224,120,0.55) 0deg 8deg, transparent 8deg 20deg);
     border-radius:50%;
-    background:radial-gradient(circle, #fff6d0 0%, #ffe066 60%, #ffcc33 100%);
+    animation:spinRays 18s linear infinite;
+  }
+  @keyframes spinRays{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+  }
+  .sun{
+    position:absolute;
+    top:18%;
+    left:18%;
+    width:64%;
+    height:64%;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 35%, #fffbe6 0%, #ffe066 55%, #ffb300 100%);
     box-shadow:0 0 40px 20px rgba(255,204,51,0.55);
     animation:pulse 2.5s ease-in-out infinite;
-    z-index:0;
   }
   @keyframes pulse{
     0%,100%{transform:scale(1); box-shadow:0 0 40px 20px rgba(255,204,51,0.55);}
-    50%{transform:scale(1.12); box-shadow:0 0 55px 28px rgba(255,204,51,0.7);}
+    50%{transform:scale(1.1); box-shadow:0 0 55px 28px rgba(255,204,51,0.7);}
   }
 
   /* passaro */
@@ -86,24 +151,48 @@
     width:110px;
     animation:walk linear infinite;
     z-index:1;
-    filter:drop-shadow(0 10px 6px rgba(0,0,0,0.25));
+  }
+  .cow-shadow{
+    position:absolute;
+    bottom:-6px;
+    left:50%;
+    width:70%;
+    height:12px;
+    background:radial-gradient(ellipse, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0) 75%);
+    transform:translateX(-50%);
+    animation:shadowPulse 0.42s ease-in-out infinite;
+    z-index:0;
+  }
+  @keyframes shadowPulse{
+    0%,100%{transform:translateX(-50%) scale(1); opacity:0.9;}
+    50%{transform:translateX(-50%) scale(0.82); opacity:0.55;}
   }
   .cow img{
     display:block;
     width:100%;
     height:auto;
-    animation:cowbob 0.4s ease-in-out infinite alternate;
+    position:relative;
+    z-index:1;
+    transform-origin:bottom center;
+    animation:cowbob 0.42s cubic-bezier(.45,0,.55,1) infinite;
+    filter:drop-shadow(0 6px 4px rgba(0,0,0,0.2));
   }
   @keyframes cowbob{
-    from{transform:translateY(0) scaleX(-1);}
-    to{transform:translateY(-8px) scaleX(-1);}
+    0%{transform:translateY(0) scaleX(-1) rotate(0deg);}
+    25%{transform:translateY(-7px) scaleX(-1) rotate(-1.5deg);}
+    50%{transform:translateY(0) scaleX(-1) rotate(0deg);}
+    75%{transform:translateY(-4px) scaleX(-1) rotate(1.5deg);}
+    100%{transform:translateY(0) scaleX(-1) rotate(0deg);}
   }
   .cow.reverse img{
     animation-name:cowbobflip;
   }
   @keyframes cowbobflip{
-    from{transform:translateY(0) scaleX(1);}
-    to{transform:translateY(-8px) scaleX(1);}
+    0%{transform:translateY(0) scaleX(1) rotate(0deg);}
+    25%{transform:translateY(-7px) scaleX(1) rotate(1.5deg);}
+    50%{transform:translateY(0) scaleX(1) rotate(0deg);}
+    75%{transform:translateY(-4px) scaleX(1) rotate(-1.5deg);}
+    100%{transform:translateY(0) scaleX(1) rotate(0deg);}
   }
   @keyframes walk{
     from{transform:translateX(-160px);}
@@ -129,14 +218,16 @@
   .card{
     position:relative;
     z-index:10;
-    background:rgba(255,255,255,0.95);
-    border-radius:24px;
-    padding:40px 50px;
+    background:linear-gradient(180deg, #fffdf7 0%, #fff5e3 100%);
+    border-radius:26px;
+    padding:42px 54px;
     text-align:center;
     box-shadow:0 20px 50px rgba(0,0,0,0.25);
     max-width:90vw;
     animation:cardIn 0.6s cubic-bezier(.34,1.56,.64,1), cardFloat 3.4s ease-in-out 0.6s infinite, cardGlow 2.6s ease-in-out 0.6s infinite;
-    border:3px solid transparent;
+    border:4px solid #fff;
+    outline:3px solid var(--wood);
+    outline-offset:-11px;
   }
   @keyframes cardIn{
     from{transform:scale(0.7) translateY(30px); opacity:0;}
@@ -152,8 +243,12 @@
   }
   .card h1{
     margin:0 0 30px 0;
-    font-size:clamp(22px, 5.5vw, 38px);
+    font-family:'Baloo 2', 'Nunito', sans-serif;
+    font-size:clamp(22px, 5.5vw, 40px);
+    font-weight:800;
     color:#3e2723;
+    letter-spacing:0.3px;
+    text-shadow:0 2px 0 rgba(255,255,255,0.6);
   }
   .card h1 span{
     color:#c0392b;
@@ -183,19 +278,21 @@
     flex-wrap:wrap;
   }
   button{
-    font-size:20px;
-    font-weight:bold;
-    padding:14px 36px;
+    font-family:'Baloo 2', 'Nunito', sans-serif;
+    font-size:21px;
+    font-weight:700;
+    padding:14px 38px;
     border:none;
-    border-radius:14px;
+    border-radius:16px;
     cursor:pointer;
+    letter-spacing:0.3px;
     transition: transform 0.15s ease, box-shadow 0.15s ease, left 0.18s ease, top 0.18s ease;
     touch-action:manipulation;
   }
   #simBtn{
-    background:#43a047;
+    background:linear-gradient(180deg, #66bb6a 0%, #43a047 100%);
     color:white;
-    box-shadow:0 6px 0 #2e7031;
+    box-shadow:0 6px 0 #2e7031, 0 10px 18px rgba(46,112,49,0.35);
     animation:simPulse 1.6s ease-in-out infinite;
   }
   @keyframes simPulse{
@@ -204,16 +301,16 @@
   }
   #simBtn:hover{
     transform:translateY(-2px) scale(1.06);
-    box-shadow:0 8px 0 #2e7031;
+    box-shadow:0 8px 0 #2e7031, 0 12px 20px rgba(46,112,49,0.4);
   }
   #simBtn:active{
     transform:translateY(4px);
     box-shadow:0 2px 0 #2e7031;
   }
   #naoBtn{
-    background:#e53935;
+    background:linear-gradient(180deg, #ef5350 0%, #e53935 100%);
     color:white;
-    box-shadow:0 6px 0 #9d1c1c;
+    box-shadow:0 6px 0 #9d1c1c, 0 10px 18px rgba(157,28,28,0.35);
     position:absolute;
     transition: left 0.18s ease, top 0.18s ease, transform 0.15s ease;
   }
@@ -238,12 +335,26 @@
     display:flex;
   }
   .popup{
-    background:white;
+    position:relative;
+    background:linear-gradient(180deg, #ffffff 0%, #f3fff2 100%);
     padding:40px 50px;
-    border-radius:20px;
+    border-radius:22px;
     text-align:center;
     box-shadow:0 20px 60px rgba(0,0,0,0.4);
     animation:popBounce 0.6s cubic-bezier(.34,1.56,.64,1);
+    border:4px solid #dff0d8;
+    overflow:visible;
+  }
+  .confetti{
+    position:absolute;
+    top:-10px;
+    font-size:20px;
+    animation:confettiFall 1.4s ease-in forwards;
+    pointer-events:none;
+  }
+  @keyframes confettiFall{
+    0%{transform:translateY(0) rotate(0deg); opacity:1;}
+    100%{transform:translateY(160px) rotate(360deg); opacity:0;}
   }
   @keyframes popBounce{
     0%{transform:scale(0.3) rotate(-8deg); opacity:0;}
@@ -305,11 +416,18 @@
       padding:12px 26px;
       border-radius:12px;
     }
-    .sun{
-      width:46px;
-      height:46px;
+    .sun-wrap{
+      width:56px;
+      height:56px;
       top:4%;
       right:6%;
+    }
+    .fence{
+      height:32px;
+    }
+    .fence-post{
+      width:6px;
+      height:28px;
     }
     .cow{
       width:78px;
@@ -333,7 +451,11 @@
 </head>
 <body>
 
-  <div id="scene"></div>
+  <div id="scene">
+    <div class="hill h1"></div>
+    <div class="hill h2"></div>
+  </div>
+  <div class="fence" id="fence"></div>
 
   <div class="card">
     <h1>Dio é realmente <span>gado</span>?</h1>
@@ -357,9 +479,10 @@
   const scene = document.getElementById('scene');
 
   // sol
-  const sun = document.createElement('div');
-  sun.className = 'sun';
-  scene.appendChild(sun);
+  const sunWrap = document.createElement('div');
+  sunWrap.className = 'sun-wrap';
+  sunWrap.innerHTML = `<div class="sun-rays"></div><div class="sun"></div>`;
+  scene.appendChild(sunWrap);
 
   // passaros
   function createBird(top, duration, delay){
@@ -384,16 +507,22 @@
     cow.style.animationDuration = duration + 's';
     cow.style.animationDelay = delay + 's';
 
-    cow.innerHTML = `<img src="cow.png" alt="boi">`;
+    cow.innerHTML = `<div class="cow-shadow"></div><img src="cow.png" alt="boi">`;
+    const img = cow.querySelector('img');
+    const shadow = cow.querySelector('.cow-shadow');
+    const bobDuration = (0.36 + Math.random()*0.14).toFixed(2);
+    img.style.animationDuration = bobDuration + 's';
+    shadow.style.animationDuration = bobDuration + 's';
     scene.appendChild(cow);
   }
 
   const cowSpots = [58, 65, 72, 80, 88];
   for(let i=0;i<9;i++){
     const top = cowSpots[i % cowSpots.length] + (Math.random()*4 - 2);
-    const duration = 14 + Math.random()*10;
+    const depth = (top - 55) / 35; // 0 = fundo, 1 = frente
+    const duration = 22 - depth*10 + Math.random()*3;
     const delay = -Math.random()*duration;
-    const scale = 0.7 + Math.random()*0.6;
+    const scale = 0.6 + depth*0.55;
     createCow(top, duration, delay, scale, Math.random() > 0.5);
   }
 
@@ -410,6 +539,14 @@
   }
   for(let i=0;i<5;i++){
     createCloud(5 + Math.random()*35, 80 + Math.random()*80, 40 + Math.random()*30, -Math.random()*40);
+  }
+
+  // postes da cerca
+  const fence = document.getElementById('fence');
+  for(let i=0;i<22;i++){
+    const p = document.createElement('div');
+    p.className = 'fence-post';
+    fence.appendChild(p);
   }
 
   // tufos de grama
@@ -496,8 +633,23 @@
 
   // popup ao clicar em Sim
   const overlay = document.getElementById('overlay');
+  const popup = document.querySelector('.popup');
+  function burstConfetti(){
+    const emojis = ['🎉','✨','🐮','🌟','🎊'];
+    for(let i=0;i<14;i++){
+      const c = document.createElement('span');
+      c.className = 'confetti';
+      c.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+      c.style.left = (Math.random()*100) + '%';
+      c.style.animationDelay = (Math.random()*0.3) + 's';
+      c.style.fontSize = (14 + Math.random()*14) + 'px';
+      popup.appendChild(c);
+      setTimeout(() => c.remove(), 1800);
+    }
+  }
   simBtn.addEventListener('click', () => {
     overlay.classList.add('show');
+    burstConfetti();
   });
   document.getElementById('closeBtn').addEventListener('click', () => {
     overlay.classList.remove('show');
