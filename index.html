@@ -46,18 +46,61 @@
     to{transform:translateX(110vw);}
   }
 
+  /* sol */
+  .sun{
+    position:absolute;
+    top:6%;
+    right:8%;
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    background:radial-gradient(circle, #fff6d0 0%, #ffe066 60%, #ffcc33 100%);
+    box-shadow:0 0 40px 20px rgba(255,204,51,0.55);
+    animation:pulse 2.5s ease-in-out infinite;
+    z-index:0;
+  }
+  @keyframes pulse{
+    0%,100%{transform:scale(1); box-shadow:0 0 40px 20px rgba(255,204,51,0.55);}
+    50%{transform:scale(1.12); box-shadow:0 0 55px 28px rgba(255,204,51,0.7);}
+  }
+
+  /* passaro */
+  .bird{
+    position:absolute;
+    font-size:20px;
+    animation:flyacross linear infinite, flap 0.5s ease-in-out infinite alternate;
+    z-index:1;
+  }
+  @keyframes flyacross{
+    from{transform:translate(-60px, 0);}
+    to{transform:translate(110vw, -40px);}
+  }
+  @keyframes flap{
+    from{transform:translateY(0) scaleY(1);}
+    to{transform:translateY(-6px) scaleY(0.85);}
+  }
+
   /* boi */
   .cow{
     position:absolute;
     width:90px;
     height:60px;
-    animation:walk linear infinite;
+    animation:walk linear infinite, bounce 0.5s ease-in-out infinite;
     z-index:1;
   }
   .cow-body{
     position:relative;
     width:100%;
     height:100%;
+    animation:headbob 0.5s ease-in-out infinite alternate;
+  }
+  @keyframes bounce{
+    0%,100%{margin-top:0px;}
+    50%{margin-top:-6px;}
+  }
+  @keyframes headbob{
+    from{transform:rotate(-2deg);}
+    to{transform:rotate(2deg);}
   }
   .cow-blob{
     position:absolute;
@@ -129,15 +172,15 @@
     background:#2b2b2b;
     bottom:-14px;
     border-radius:2px;
-    animation:legmove 0.5s ease-in-out infinite alternate;
+    animation:legmove 0.3s ease-in-out infinite alternate;
   }
   .cow-leg.l1{left:16px;}
-  .cow-leg.l2{left:30px; animation-delay:0.25s;}
-  .cow-leg.l3{left:50px; animation-delay:0.1s;}
-  .cow-leg.l4{left:64px; animation-delay:0.35s;}
+  .cow-leg.l2{left:30px; animation-delay:0.15s;}
+  .cow-leg.l3{left:50px; animation-delay:0.06s;}
+  .cow-leg.l4{left:64px; animation-delay:0.21s;}
   @keyframes legmove{
-    from{transform:rotate(-12deg);}
-    to{transform:rotate(12deg);}
+    from{transform:rotate(-20deg);}
+    to{transform:rotate(20deg);}
   }
   .cow-tail{
     position:absolute;
@@ -148,11 +191,11 @@
     top:16px;
     border-radius:2px;
     transform-origin:top center;
-    animation:tailwag 0.6s ease-in-out infinite alternate;
+    animation:tailwag 0.35s ease-in-out infinite alternate;
   }
   @keyframes tailwag{
-    from{transform:rotate(-10deg);}
-    to{transform:rotate(15deg);}
+    from{transform:rotate(-15deg);}
+    to{transform:rotate(20deg);}
   }
   @keyframes walk{
     from{transform:translateX(-140px) scaleX(1);}
@@ -184,14 +227,28 @@
     text-align:center;
     box-shadow:0 20px 50px rgba(0,0,0,0.25);
     max-width:90vw;
+    animation:cardIn 0.6s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes cardIn{
+    from{transform:scale(0.7) translateY(30px); opacity:0;}
+    to{transform:scale(1) translateY(0); opacity:1;}
   }
   .card h1{
     margin:0 0 30px 0;
-    font-size:clamp(24px, 4vw, 38px);
+    font-size:clamp(22px, 5.5vw, 38px);
     color:#3e2723;
   }
   .card h1 span{
     color:#c0392b;
+    display:inline-block;
+    animation:wiggle 1.8s ease-in-out infinite;
+  }
+  @keyframes wiggle{
+    0%,100%{transform:rotate(0deg);}
+    10%{transform:rotate(-6deg);}
+    20%{transform:rotate(6deg);}
+    30%{transform:rotate(-4deg);}
+    40%{transform:rotate(0deg);}
   }
   .btn-row{
     display:flex;
@@ -200,6 +257,7 @@
     align-items:center;
     position:relative;
     min-height:70px;
+    flex-wrap:wrap;
   }
   button{
     font-size:20px;
@@ -208,15 +266,21 @@
     border:none;
     border-radius:14px;
     cursor:pointer;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, left 0.18s ease, top 0.18s ease;
+    touch-action:manipulation;
   }
   #simBtn{
     background:#43a047;
     color:white;
     box-shadow:0 6px 0 #2e7031;
+    animation:simPulse 1.6s ease-in-out infinite;
+  }
+  @keyframes simPulse{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.06);}
   }
   #simBtn:hover{
-    transform:translateY(-2px);
+    transform:translateY(-2px) scale(1.06);
     box-shadow:0 8px 0 #2e7031;
   }
   #simBtn:active{
@@ -266,6 +330,55 @@
     color:white;
     box-shadow:0 5px 0 #2e7031;
   }
+
+  /* mobile */
+  @media (max-width: 600px){
+    body{
+      align-items:flex-end;
+      padding-bottom:6vh;
+    }
+    .card{
+      padding:26px 22px;
+      border-radius:20px;
+      width:100%;
+    }
+    .card h1{
+      margin-bottom:22px;
+    }
+    .btn-row{
+      gap:18px;
+      min-height:120px;
+    }
+    button{
+      font-size:17px;
+      padding:12px 26px;
+      border-radius:12px;
+    }
+    .sun{
+      width:46px;
+      height:46px;
+      top:4%;
+      right:6%;
+    }
+    .cow{
+      width:64px;
+      height:44px;
+    }
+    .popup{
+      padding:30px 28px;
+      max-width:85vw;
+    }
+    .popup p{
+      font-size:20px;
+    }
+  }
+
+  @media (max-height: 480px) and (orientation: landscape){
+    body{ align-items:center; padding-bottom:0; }
+    .card{ padding:18px 24px; }
+    .card h1{ margin-bottom:14px; font-size:20px; }
+    .btn-row{ min-height:60px; }
+  }
 </style>
 </head>
 <body>
@@ -289,6 +402,25 @@
 
 <script>
   const scene = document.getElementById('scene');
+
+  // sol
+  const sun = document.createElement('div');
+  sun.className = 'sun';
+  scene.appendChild(sun);
+
+  // passaros
+  function createBird(top, duration, delay){
+    const b = document.createElement('div');
+    b.className = 'bird';
+    b.style.top = top + '%';
+    b.style.animationDuration = `${duration}s, 0.5s`;
+    b.style.animationDelay = `${delay}s, 0s`;
+    b.textContent = '🐦';
+    scene.appendChild(b);
+  }
+  for(let i=0;i<3;i++){
+    createBird(8 + Math.random()*20, 18 + Math.random()*10, -Math.random()*20);
+  }
 
   // gerar bois
   const spotConfigs = [
@@ -367,8 +499,19 @@
   const simBtn = document.getElementById('simBtn');
   const btnRow = document.querySelector('.btn-row');
 
-  function dodge(e){
+  function jump(pointerX, pointerY){
     const rowRect = btnRow.getBoundingClientRect();
+    const btnRect = naoBtn.getBoundingClientRect();
+    const maxX = Math.max(rowRect.width - btnRect.width - 10, 40);
+    const maxY = 160;
+    const newX = (Math.random() - 0.5) * 2 * (maxX/2);
+    const newY = (Math.random() - 0.5) * 2 * maxY;
+    naoBtn.style.position = 'relative';
+    naoBtn.style.left = newX + 'px';
+    naoBtn.style.top = newY + 'px';
+  }
+
+  function dodge(e){
     const btnRect = naoBtn.getBoundingClientRect();
     const mouseX = e.clientX;
     const mouseY = e.clientY;
@@ -378,26 +521,29 @@
     const dist = Math.hypot(mouseX - btnCenterX, mouseY - btnCenterY);
 
     if(dist < 90){
-      const maxX = rowRect.width - btnRect.width - 10;
-      const maxY = 200;
-      const newX = (Math.random() - 0.5) * 2 * (maxX/2);
-      const newY = (Math.random() - 0.5) * 2 * maxY;
-      naoBtn.style.position = 'relative';
-      naoBtn.style.left = newX + 'px';
-      naoBtn.style.top = newY + 'px';
+      jump();
     }
   }
 
   document.addEventListener('mousemove', dodge);
   naoBtn.addEventListener('mouseover', dodge);
+
+  document.addEventListener('touchmove', function(e){
+    const touch = e.touches[0];
+    if(!touch) return;
+    const btnRect = naoBtn.getBoundingClientRect();
+    const btnCenterX = btnRect.left + btnRect.width/2;
+    const btnCenterY = btnRect.top + btnRect.height/2;
+    const dist = Math.hypot(touch.clientX - btnCenterX, touch.clientY - btnCenterY);
+    if(dist < 70){
+      jump();
+    }
+  }, {passive:true});
+
   naoBtn.addEventListener('touchstart', function(e){
     e.preventDefault();
-    const newX = (Math.random() - 0.5) * 200;
-    const newY = (Math.random() - 0.5) * 200;
-    naoBtn.style.position = 'relative';
-    naoBtn.style.left = newX + 'px';
-    naoBtn.style.top = newY + 'px';
-  });
+    jump();
+  }, {passive:false});
 
   // popup ao clicar em Sim
   const overlay = document.getElementById('overlay');
