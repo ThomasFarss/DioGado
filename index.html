@@ -135,11 +135,20 @@
     text-align:center;
     box-shadow:0 20px 50px rgba(0,0,0,0.25);
     max-width:90vw;
-    animation:cardIn 0.6s cubic-bezier(.34,1.56,.64,1);
+    animation:cardIn 0.6s cubic-bezier(.34,1.56,.64,1), cardFloat 3.4s ease-in-out 0.6s infinite, cardGlow 2.6s ease-in-out 0.6s infinite;
+    border:3px solid transparent;
   }
   @keyframes cardIn{
     from{transform:scale(0.7) translateY(30px); opacity:0;}
     to{transform:scale(1) translateY(0); opacity:1;}
+  }
+  @keyframes cardFloat{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-10px);}
+  }
+  @keyframes cardGlow{
+    0%,100%{box-shadow:0 20px 50px rgba(0,0,0,0.25), 0 0 0 rgba(255,204,51,0);}
+    50%{box-shadow:0 26px 60px rgba(0,0,0,0.3), 0 0 30px rgba(255,204,51,0.45);}
   }
   .card h1{
     margin:0 0 30px 0;
@@ -157,6 +166,12 @@
     20%{transform:rotate(6deg);}
     30%{transform:rotate(-4deg);}
     40%{transform:rotate(0deg);}
+  }
+  .dodge-zone{
+    position:relative;
+    width:100%;
+    min-height:150px;
+    overflow:hidden;
   }
   .btn-row{
     display:flex;
@@ -199,7 +214,8 @@
     background:#e53935;
     color:white;
     box-shadow:0 6px 0 #9d1c1c;
-    position:relative;
+    position:absolute;
+    transition: left 0.18s ease, top 0.18s ease, transform 0.15s ease;
   }
 
   /* popup */
@@ -277,9 +293,12 @@
     .card h1{
       margin-bottom:22px;
     }
+    .dodge-zone{
+      min-height:190px;
+    }
     .btn-row{
       gap:18px;
-      min-height:120px;
+      min-height:60px;
     }
     button{
       font-size:17px;
@@ -308,7 +327,7 @@
     body{ align-items:center; padding-bottom:0; }
     .card{ padding:18px 24px; }
     .card h1{ margin-bottom:14px; font-size:20px; }
-    .btn-row{ min-height:60px; }
+    .dodge-zone{ min-height:100px; }
   }
 </style>
 </head>
@@ -318,8 +337,10 @@
 
   <div class="card">
     <h1>Dio é realmente <span>gado</span>?</h1>
-    <div class="btn-row">
-      <button id="simBtn">Sim</button>
+    <div class="dodge-zone" id="dodgeZone">
+      <div class="btn-row">
+        <button id="simBtn">Sim</button>
+      </div>
       <button id="naoBtn">Não</button>
     </div>
   </div>
@@ -400,22 +421,44 @@
     scene.appendChild(t);
   }
 
-  // botão "Não" foge do mouse
+  // botão "Não" foge do mouse, sempre dentro do card
   const naoBtn = document.getElementById('naoBtn');
   const simBtn = document.getElementById('simBtn');
-  const btnRow = document.querySelector('.btn-row');
+  const dodgeZone = document.getElementById('dodgeZone');
 
-  function jump(pointerX, pointerY){
-    const rowRect = btnRow.getBoundingClientRect();
-    const btnRect = naoBtn.getBoundingClientRect();
-    const maxX = Math.max(rowRect.width - btnRect.width - 10, 40);
-    const maxY = 160;
-    const newX = (Math.random() - 0.5) * 2 * (maxX/2);
-    const newY = (Math.random() - 0.5) * 2 * maxY;
-    naoBtn.style.position = 'relative';
-    naoBtn.style.left = newX + 'px';
-    naoBtn.style.top = newY + 'px';
+  function placeNao(x, y){
+    const zoneRect = dodgeZone.getBoundingClientRect();
+    const btnW = naoBtn.offsetWidth || 90;
+    const btnH = naoBtn.offsetHeight || 50;
+    const maxX = Math.max(zoneRect.width - btnW, 0);
+    const maxY = Math.max(zoneRect.height - btnH, 0);
+    const clampedX = Math.min(Math.max(x, 0), maxX);
+    const clampedY = Math.min(Math.max(y, 0), maxY);
+    naoBtn.style.left = clampedX + 'px';
+    naoBtn.style.top = clampedY + 'px';
   }
+
+  function initNaoPosition(){
+    const zoneRect = dodgeZone.getBoundingClientRect();
+    const simRect = simBtn.getBoundingClientRect();
+    const btnW = naoBtn.offsetWidth || 90;
+    const startX = (simRect.right - zoneRect.left) + 20;
+    const startY = (simRect.top - zoneRect.top);
+    placeNao(startX, startY);
+  }
+
+  function jump(){
+    const zoneRect = dodgeZone.getBoundingClientRect();
+    const btnW = naoBtn.offsetWidth || 90;
+    const btnH = naoBtn.offsetHeight || 50;
+    const maxX = Math.max(zoneRect.width - btnW, 0);
+    const maxY = Math.max(zoneRect.height - btnH, 0);
+    placeNao(Math.random() * maxX, Math.random() * maxY);
+  }
+
+  window.addEventListener('load', initNaoPosition);
+  window.addEventListener('resize', initNaoPosition);
+  initNaoPosition();
 
   function dodge(e){
     const btnRect = naoBtn.getBoundingClientRect();
