@@ -448,20 +448,24 @@
     border-radius:22px;
     text-align:center;
     box-shadow:0 20px 60px rgba(0,0,0,0.4);
-    animation:popBounce 0.6s cubic-bezier(.34,1.56,.64,1);
+    animation:popBounce 0.6s cubic-bezier(.34,1.56,.64,1), borderPulse 1.8s ease-in-out 0.6s infinite;
     border:4px solid #dff0d8;
     overflow:visible;
+  }
+  @keyframes borderPulse{
+    0%,100%{border-color:#dff0d8; box-shadow:0 20px 60px rgba(0,0,0,0.4);}
+    50%{border-color:#9be08a; box-shadow:0 20px 60px rgba(0,0,0,0.4), 0 0 30px rgba(76,175,80,0.5);}
   }
   .confetti{
     position:absolute;
     top:-10px;
     font-size:20px;
-    animation:confettiFall 1.4s ease-in forwards;
+    animation:confettiFall 1.6s ease-in forwards;
     pointer-events:none;
   }
   @keyframes confettiFall{
-    0%{transform:translateY(0) rotate(0deg); opacity:1;}
-    100%{transform:translateY(160px) rotate(360deg); opacity:0;}
+    0%{transform:translateY(0) rotate(0deg) scale(1); opacity:1;}
+    100%{transform:translateY(220px) rotate(520deg) scale(0.6); opacity:0;}
   }
   @keyframes popBounce{
     0%{transform:scale(0.3) rotate(-8deg); opacity:0;}
@@ -469,26 +473,50 @@
     75%{transform:scale(0.95) rotate(-2deg);}
     100%{transform:scale(1) rotate(0deg);}
   }
-  .popup .popup-icon{
-    font-size:46px;
-    display:block;
-    margin-bottom:10px;
-    animation:iconSpin 1s ease-in-out infinite;
+  .icon-wrap{
+    position:relative;
+    display:inline-block;
+    margin-bottom:12px;
   }
-  @keyframes iconSpin{
-    0%,100%{transform:rotate(-12deg) scale(1);}
-    50%{transform:rotate(12deg) scale(1.15);}
+  .icon-ring{
+    position:absolute;
+    inset:-14px;
+    border-radius:50%;
+    border:3px solid #66bb6a;
+    animation:ringPulse 1.6s ease-out infinite;
+  }
+  .icon-ring.delay{
+    animation-delay:0.8s;
+  }
+  @keyframes ringPulse{
+    0%{transform:scale(0.5); opacity:0.8;}
+    100%{transform:scale(1.8); opacity:0;}
+  }
+  .popup .popup-icon{
+    position:relative;
+    font-size:50px;
+    display:block;
+    animation:iconBounce 0.9s cubic-bezier(.34,1.56,.64,1) infinite;
+  }
+  @keyframes iconBounce{
+    0%,100%{transform:translateY(0) rotate(-10deg) scale(1);}
+    30%{transform:translateY(-14px) rotate(8deg) scale(1.1);}
+    55%{transform:translateY(0) rotate(-6deg) scale(0.96);}
+    75%{transform:translateY(-4px) rotate(4deg) scale(1.03);}
   }
   .popup p{
     font-size:24px;
     font-weight:bold;
     color:#2e7031;
     margin:0 0 20px 0;
-    animation:textGlow 1.4s ease-in-out infinite;
   }
-  @keyframes textGlow{
-    0%,100%{text-shadow:0 0 0 rgba(67,160,71,0);}
-    50%{text-shadow:0 0 14px rgba(67,160,71,0.55);}
+  .popup p span{
+    display:inline-block;
+    animation:letterWave 1.2s ease-in-out infinite;
+  }
+  @keyframes letterWave{
+    0%,60%,100%{transform:translateY(0);}
+    30%{transform:translateY(-6px);}
   }
   .popup button{
     background:#43a047;
@@ -637,8 +665,12 @@
 
   <div class="overlay" id="overlay">
     <div class="popup">
-      <span class="popup-icon">🐮</span>
-      <p>Ainda bem que sabe ...</p>
+      <span class="icon-wrap">
+        <span class="icon-ring"></span>
+        <span class="icon-ring delay"></span>
+        <span class="popup-icon">🐮</span>
+      </span>
+      <p id="popupText"></p>
       <button id="closeBtn">Fechar</button>
     </div>
   </div>
@@ -802,6 +834,17 @@
   // popup ao clicar em Sim
   const overlay = document.getElementById('overlay');
   const popup = document.querySelector('.popup');
+
+  // texto animado letra a letra
+  const popupText = document.getElementById('popupText');
+  const messageText = 'Ainda bem que sabe ...';
+  messageText.split('').forEach((ch, i) => {
+    const s = document.createElement('span');
+    s.textContent = ch === ' ' ? ' ' : ch;
+    s.style.animationDelay = (i * 0.05) + 's';
+    popupText.appendChild(s);
+  });
+
   function burstConfetti(){
     const emojis = ['🎉','✨','🐮','🌟','🎊'];
     for(let i=0;i<14;i++){
@@ -815,12 +858,15 @@
       setTimeout(() => c.remove(), 1800);
     }
   }
+  let confettiInterval = null;
   simBtn.addEventListener('click', () => {
     overlay.classList.add('show');
     burstConfetti();
+    confettiInterval = setInterval(burstConfetti, 1600);
   });
   document.getElementById('closeBtn').addEventListener('click', () => {
     overlay.classList.remove('show');
+    clearInterval(confettiInterval);
   });
 </script>
 </body>
