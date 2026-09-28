@@ -83,125 +83,33 @@
   /* boi */
   .cow{
     position:absolute;
-    width:90px;
-    height:60px;
-    animation:walk linear infinite, bounce 0.5s ease-in-out infinite;
+    width:110px;
+    animation:walk linear infinite;
     z-index:1;
+    filter:drop-shadow(0 10px 6px rgba(0,0,0,0.25));
   }
-  .cow-body{
-    position:relative;
+  .cow img{
+    display:block;
     width:100%;
-    height:100%;
-    animation:headbob 0.5s ease-in-out infinite alternate;
+    height:auto;
+    animation:cowbob 0.4s ease-in-out infinite alternate;
   }
-  @keyframes bounce{
-    0%,100%{margin-top:0px;}
-    50%{margin-top:-6px;}
+  @keyframes cowbob{
+    from{transform:translateY(0) scaleX(-1);}
+    to{transform:translateY(-8px) scaleX(-1);}
   }
-  @keyframes headbob{
-    from{transform:rotate(-2deg);}
-    to{transform:rotate(2deg);}
+  .cow.reverse img{
+    animation-name:cowbobflip;
   }
-  .cow-blob{
-    position:absolute;
-    width:70px;
-    height:42px;
-    background:#fff;
-    border-radius:45% 45% 40% 40%;
-    left:10px;
-    top:10px;
-    box-shadow: inset -8px -6px 0 rgba(0,0,0,0.05);
-  }
-  .spot{
-    position:absolute;
-    background:#2b2b2b;
-    border-radius:50%;
-  }
-  .cow-head{
-    position:absolute;
-    width:26px;
-    height:24px;
-    background:#fff;
-    border-radius:50% 50% 45% 45%;
-    left:-14px;
-    top:14px;
-    border:2px solid #2b2b2b22;
-  }
-  .cow-head::before{ /* focinho */
-    content:"";
-    position:absolute;
-    width:16px;
-    height:12px;
-    background:#f7c1c9;
-    border-radius:50%;
-    left:-6px;
-    top:10px;
-  }
-  .cow-ear{
-    position:absolute;
-    width:10px;
-    height:6px;
-    background:#2b2b2b;
-    border-radius:50%;
-    top:8px;
-  }
-  .cow-ear.l{left:-16px;}
-  .cow-ear.r{left:6px;}
-  .cow-horn{
-    position:absolute;
-    width:5px;
-    height:8px;
-    background:#e0d3b8;
-    border-radius:2px;
-    top:2px;
-  }
-  .cow-horn.l{left:-6px; transform:rotate(-20deg);}
-  .cow-horn.r{left:4px; transform:rotate(20deg);}
-  .cow-eye{
-    position:absolute;
-    width:3px;height:3px;
-    background:#111;
-    border-radius:50%;
-    top:16px;
-    left:-2px;
-  }
-  .cow-leg{
-    position:absolute;
-    width:6px;
-    height:18px;
-    background:#2b2b2b;
-    bottom:-14px;
-    border-radius:2px;
-    animation:legmove 0.3s ease-in-out infinite alternate;
-  }
-  .cow-leg.l1{left:16px;}
-  .cow-leg.l2{left:30px; animation-delay:0.15s;}
-  .cow-leg.l3{left:50px; animation-delay:0.06s;}
-  .cow-leg.l4{left:64px; animation-delay:0.21s;}
-  @keyframes legmove{
-    from{transform:rotate(-20deg);}
-    to{transform:rotate(20deg);}
-  }
-  .cow-tail{
-    position:absolute;
-    width:3px;
-    height:16px;
-    background:#2b2b2b;
-    right:6px;
-    top:16px;
-    border-radius:2px;
-    transform-origin:top center;
-    animation:tailwag 0.35s ease-in-out infinite alternate;
-  }
-  @keyframes tailwag{
-    from{transform:rotate(-15deg);}
-    to{transform:rotate(20deg);}
+  @keyframes cowbobflip{
+    from{transform:translateY(0) scaleX(1);}
+    to{transform:translateY(-8px) scaleX(1);}
   }
   @keyframes walk{
-    from{transform:translateX(-140px) scaleX(1);}
-    50.01%{transform:translateX(105vw) scaleX(1);}
-    50.02%{transform:translateX(105vw) scaleX(-1);}
-    to{transform:translateX(-140px) scaleX(-1);}
+    from{transform:translateX(-160px);}
+    50.01%{transform:translateX(105vw);}
+    50.02%{transform:translateX(105vw);}
+    to{transform:translateX(-160px);}
   }
   .cow.reverse{
     animation-direction:alternate;
@@ -299,10 +207,16 @@
     position:fixed;
     inset:0;
     background:rgba(0,0,0,0.55);
+    backdrop-filter:blur(3px);
     display:none;
     align-items:center;
     justify-content:center;
     z-index:100;
+    animation:fadeIn 0.25s ease;
+  }
+  @keyframes fadeIn{
+    from{opacity:0;}
+    to{opacity:1;}
   }
   .overlay.show{
     display:flex;
@@ -313,22 +227,40 @@
     border-radius:20px;
     text-align:center;
     box-shadow:0 20px 60px rgba(0,0,0,0.4);
-    animation:pop 0.35s cubic-bezier(.34,1.56,.64,1);
+    animation:popBounce 0.6s cubic-bezier(.34,1.56,.64,1);
   }
-  @keyframes pop{
-    from{transform:scale(0.5); opacity:0;}
-    to{transform:scale(1); opacity:1;}
+  @keyframes popBounce{
+    0%{transform:scale(0.3) rotate(-8deg); opacity:0;}
+    55%{transform:scale(1.12) rotate(3deg); opacity:1;}
+    75%{transform:scale(0.95) rotate(-2deg);}
+    100%{transform:scale(1) rotate(0deg);}
+  }
+  .popup .popup-icon{
+    font-size:46px;
+    display:block;
+    margin-bottom:10px;
+    animation:iconSpin 1s ease-in-out infinite;
+  }
+  @keyframes iconSpin{
+    0%,100%{transform:rotate(-12deg) scale(1);}
+    50%{transform:rotate(12deg) scale(1.15);}
   }
   .popup p{
     font-size:24px;
     font-weight:bold;
     color:#2e7031;
     margin:0 0 20px 0;
+    animation:textGlow 1.4s ease-in-out infinite;
+  }
+  @keyframes textGlow{
+    0%,100%{text-shadow:0 0 0 rgba(67,160,71,0);}
+    50%{text-shadow:0 0 14px rgba(67,160,71,0.55);}
   }
   .popup button{
     background:#43a047;
     color:white;
     box-shadow:0 5px 0 #2e7031;
+    animation:simPulse 1.6s ease-in-out infinite;
   }
 
   /* mobile */
@@ -361,8 +293,7 @@
       right:6%;
     }
     .cow{
-      width:64px;
-      height:44px;
+      width:78px;
     }
     .popup{
       padding:30px 28px;
@@ -395,6 +326,7 @@
 
   <div class="overlay" id="overlay">
     <div class="popup">
+      <span class="popup-icon">🐮</span>
       <p>Ainda bem que sabe ...</p>
       <button id="closeBtn">Fechar</button>
     </div>
@@ -423,12 +355,6 @@
   }
 
   // gerar bois
-  const spotConfigs = [
-    [{w:22,h:16,l:5,t:2},{w:16,h:12,l:35,t:20},{w:14,h:10,l:2,t:22}],
-    [{w:18,h:14,l:15,t:5},{w:20,h:16,l:40,t:10}],
-    [{w:26,h:18,l:8,t:10},{w:14,h:10,l:44,t:4}],
-  ];
-
   function createCow(top, duration, delay, scale, reverse){
     const cow = document.createElement('div');
     cow.className = 'cow' + (reverse ? ' reverse' : '');
@@ -437,27 +363,7 @@
     cow.style.animationDuration = duration + 's';
     cow.style.animationDelay = delay + 's';
 
-    const spots = spotConfigs[Math.floor(Math.random()*spotConfigs.length)]
-      .map(s => `<div class="spot" style="width:${s.w}px;height:${s.h}px;left:${s.l}px;top:${s.t}px;"></div>`)
-      .join('');
-
-    cow.innerHTML = `
-      <div class="cow-body">
-        <div class="cow-tail"></div>
-        <div class="cow-leg l1"></div>
-        <div class="cow-leg l2"></div>
-        <div class="cow-leg l3"></div>
-        <div class="cow-leg l4"></div>
-        <div class="cow-blob">${spots}</div>
-        <div class="cow-head">
-          <div class="cow-horn l"></div>
-          <div class="cow-horn r"></div>
-          <div class="cow-ear l"></div>
-          <div class="cow-ear r"></div>
-          <div class="cow-eye"></div>
-        </div>
-      </div>
-    `;
+    cow.innerHTML = `<img src="cow.png" alt="boi">`;
     scene.appendChild(cow);
   }
 
