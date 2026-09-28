@@ -214,44 +214,87 @@
     border-radius:50% 50% 0 0;
   }
 
-  /* card central */
-  .card{
+  /* card central: placa de madeira de fazenda pendurada */
+  .card-hanger{
     position:relative;
     z-index:10;
-    background:linear-gradient(180deg, #fffdf7 0%, #fff5e3 100%);
-    border-radius:26px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    animation:cardIn 0.6s cubic-bezier(.34,1.56,.64,1), cardFloat 3.4s ease-in-out 0.6s infinite;
+  }
+  .ropes{
+    display:flex;
+    gap:120px;
+    margin-bottom:-6px;
+  }
+  .rope{
+    width:6px;
+    height:34px;
+    background:linear-gradient(180deg, #b8895a, #8a5a34);
+    border-radius:3px;
+    box-shadow:inset -2px 0 2px rgba(0,0,0,0.25);
+  }
+  .rope::before{
+    content:"";
+    display:block;
+    width:16px;
+    height:16px;
+    margin:-8px 0 0 -5px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #cfa27a, #6b4423);
+    box-shadow:0 2px 3px rgba(0,0,0,0.4);
+  }
+  .card{
+    position:relative;
+    background:
+      repeating-linear-gradient(100deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 2px, transparent 2px, transparent 9px),
+      linear-gradient(160deg, #c8965f 0%, #a9713f 45%, #8a5a34 100%);
+    border-radius:20px;
     padding:42px 54px;
     text-align:center;
-    box-shadow:0 20px 50px rgba(0,0,0,0.25);
+    box-shadow:0 20px 50px rgba(0,0,0,0.35), inset 0 0 0 6px rgba(255,255,255,0.08);
     max-width:90vw;
-    animation:cardIn 0.6s cubic-bezier(.34,1.56,.64,1), cardFloat 3.4s ease-in-out 0.6s infinite, cardGlow 2.6s ease-in-out 0.6s infinite;
-    border:4px solid #fff;
-    outline:3px solid var(--wood);
-    outline-offset:-11px;
+    border:5px solid var(--wood-dark);
+    animation:cardGlow 2.6s ease-in-out 0.6s infinite;
   }
+  .card::before, .card::after,
+  .card .bolt{
+    content:"";
+    position:absolute;
+    width:14px;
+    height:14px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #f4e2c8, #7a5533);
+    box-shadow:inset 0 0 2px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.4);
+  }
+  .card::before{ top:14px; left:14px; }
+  .card::after{ top:14px; right:14px; }
+  .card .bolt.bl{ bottom:14px; left:14px; }
+  .card .bolt.br{ bottom:14px; right:14px; }
   @keyframes cardIn{
     from{transform:scale(0.7) translateY(30px); opacity:0;}
     to{transform:scale(1) translateY(0); opacity:1;}
   }
   @keyframes cardFloat{
-    0%,100%{transform:translateY(0);}
-    50%{transform:translateY(-10px);}
+    0%,100%{transform:translateY(0) rotate(0deg);}
+    50%{transform:translateY(-9px) rotate(-0.4deg);}
   }
   @keyframes cardGlow{
-    0%,100%{box-shadow:0 20px 50px rgba(0,0,0,0.25), 0 0 0 rgba(255,204,51,0);}
-    50%{box-shadow:0 26px 60px rgba(0,0,0,0.3), 0 0 30px rgba(255,204,51,0.45);}
+    0%,100%{box-shadow:0 20px 50px rgba(0,0,0,0.35), inset 0 0 0 6px rgba(255,255,255,0.08), 0 0 0 rgba(255,204,51,0);}
+    50%{box-shadow:0 26px 60px rgba(0,0,0,0.4), inset 0 0 0 6px rgba(255,255,255,0.08), 0 0 26px rgba(255,204,51,0.45);}
   }
   .card h1{
     margin:0 0 30px 0;
     font-family:'Baloo 2', 'Nunito', sans-serif;
     font-size:clamp(22px, 5.5vw, 40px);
     font-weight:800;
-    color:#3e2723;
+    color:#fff6e0;
     letter-spacing:0.3px;
-    text-shadow:0 2px 0 rgba(255,255,255,0.6);
+    text-shadow:0 2px 0 rgba(0,0,0,0.45), 0 -1px 0 rgba(255,255,255,0.15);
   }
   .card h1 span{
-    color:#c0392b;
+    color:#ffd54f;
     display:inline-block;
     animation:wiggle 1.8s ease-in-out infinite;
   }
@@ -281,18 +324,30 @@
     font-family:'Baloo 2', 'Nunito', sans-serif;
     font-size:21px;
     font-weight:700;
-    padding:14px 38px;
+    padding:14px 34px;
     border:none;
-    border-radius:16px;
+    border-radius:12px;
     cursor:pointer;
     letter-spacing:0.3px;
+    position:relative;
+    isolation:isolate;
     transition: transform 0.15s ease, box-shadow 0.15s ease, left 0.18s ease, top 0.18s ease;
     touch-action:manipulation;
   }
+  button::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:inherit;
+    background:repeating-linear-gradient(95deg, rgba(255,255,255,0.12) 0px, rgba(255,255,255,0.12) 2px, transparent 2px, transparent 7px);
+    z-index:-1;
+  }
   #simBtn{
-    background:linear-gradient(180deg, #66bb6a 0%, #43a047 100%);
-    color:white;
-    box-shadow:0 6px 0 #2e7031, 0 10px 18px rgba(46,112,49,0.35);
+    background:linear-gradient(180deg, #7cc576 0%, #4c9a3f 55%, #3f7f34 100%);
+    color:#fff6e0;
+    border:2px solid #2e6b26;
+    box-shadow:0 6px 0 #2e5e26, 0 10px 18px rgba(46,112,49,0.35);
+    text-shadow:0 1px 1px rgba(0,0,0,0.35);
     animation:simPulse 1.6s ease-in-out infinite;
   }
   @keyframes simPulse{
@@ -301,16 +356,18 @@
   }
   #simBtn:hover{
     transform:translateY(-2px) scale(1.06);
-    box-shadow:0 8px 0 #2e7031, 0 12px 20px rgba(46,112,49,0.4);
+    box-shadow:0 8px 0 #2e5e26, 0 12px 20px rgba(46,112,49,0.4);
   }
   #simBtn:active{
     transform:translateY(4px);
-    box-shadow:0 2px 0 #2e7031;
+    box-shadow:0 2px 0 #2e5e26;
   }
   #naoBtn{
-    background:linear-gradient(180deg, #ef5350 0%, #e53935 100%);
-    color:white;
-    box-shadow:0 6px 0 #9d1c1c, 0 10px 18px rgba(157,28,28,0.35);
+    background:linear-gradient(180deg, #e2694a 0%, #b8432b 55%, #96351f 100%);
+    color:#fff6e0;
+    border:2px solid #6e2413;
+    box-shadow:0 6px 0 #6e2413, 0 10px 18px rgba(110,36,19,0.4);
+    text-shadow:0 1px 1px rgba(0,0,0,0.35);
     position:absolute;
     transition: left 0.18s ease, top 0.18s ease, transform 0.15s ease;
   }
@@ -396,9 +453,15 @@
       align-items:flex-end;
       padding-bottom:6vh;
     }
+    .card-hanger{
+      width:100%;
+    }
+    .ropes{
+      gap:60px;
+    }
     .card{
       padding:26px 22px;
-      border-radius:20px;
+      border-radius:18px;
       width:100%;
     }
     .card h1{
@@ -443,6 +506,7 @@
 
   @media (max-height: 480px) and (orientation: landscape){
     body{ align-items:center; padding-bottom:0; }
+    .ropes{ display:none; }
     .card{ padding:18px 24px; }
     .card h1{ margin-bottom:14px; font-size:20px; }
     .dodge-zone{ min-height:100px; }
@@ -457,13 +521,17 @@
   </div>
   <div class="fence" id="fence"></div>
 
-  <div class="card">
-    <h1>Dio é realmente <span>gado</span>?</h1>
-    <div class="dodge-zone" id="dodgeZone">
-      <div class="btn-row">
-        <button id="simBtn">Sim</button>
+  <div class="card-hanger">
+    <div class="ropes"><div class="rope"></div><div class="rope"></div></div>
+    <div class="card">
+      <span class="bolt bl"></span><span class="bolt br"></span>
+      <h1>Dio é realmente <span>gado</span>?</h1>
+      <div class="dodge-zone" id="dodgeZone">
+        <div class="btn-row">
+          <button id="simBtn">🌾 Sim</button>
+        </div>
+        <button id="naoBtn">🚫 Não</button>
       </div>
-      <button id="naoBtn">Não</button>
     </div>
   </div>
 
