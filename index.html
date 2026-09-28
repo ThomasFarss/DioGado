@@ -18,11 +18,12 @@
     --wood:#8a5a34;
     --wood-dark:#6b4423;
   }
-  *{box-sizing:border-box;}
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html,body{
     margin:0;
     padding:0;
     height:100%;
+    height:100dvh;
     overflow:hidden;
     font-family:'Nunito', 'Segoe UI', Tahoma, sans-serif;
   }
@@ -38,6 +39,7 @@
     display:flex;
     align-items:center;
     justify-content:center;
+    padding:16px;
   }
 
   /* colinas ao fundo para dar profundidade */
@@ -51,6 +53,46 @@
   }
   .hill.h1{ top:52%; height:80px; }
   .hill.h2{ top:56%; height:70px; background:var(--grass-deep); opacity:0.4; }
+
+  /* celeiro ao fundo */
+  .barn{
+    position:absolute;
+    bottom:14%;
+    left:6%;
+    width:70px;
+    height:60px;
+    z-index:0;
+    opacity:0.5;
+    filter:blur(0.3px);
+  }
+  .barn-body{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:70%;
+    background:#b23b2e;
+    border-radius:3px;
+  }
+  .barn-roof{
+    position:absolute;
+    top:0;
+    width:0;
+    height:0;
+    border-left:38px solid transparent;
+    border-right:38px solid transparent;
+    border-bottom:26px solid #7a2820;
+    left:-3px;
+  }
+  .barn-door{
+    position:absolute;
+    bottom:0;
+    left:50%;
+    width:20px;
+    height:60%;
+    background:#5c1e18;
+    transform:translateX(-50%);
+    border-radius:10px 10px 0 0;
+  }
 
   /* cerca de madeira */
   .fence{
@@ -298,6 +340,14 @@
     display:inline-block;
     animation:wiggle 1.8s ease-in-out infinite;
   }
+  .card .subtitle{
+    margin:-18px 0 22px 0;
+    font-size:14px;
+    font-weight:700;
+    color:#fff0d2;
+    opacity:0.85;
+    letter-spacing:0.2px;
+  }
   @keyframes wiggle{
     0%,100%{transform:rotate(0deg);}
     10%{transform:rotate(-6deg);}
@@ -450,66 +500,111 @@
   /* mobile */
   @media (max-width: 600px){
     body{
-      align-items:flex-end;
-      padding-bottom:6vh;
+      padding:14px;
     }
     .card-hanger{
       width:100%;
+      max-width:360px;
     }
     .ropes{
-      gap:60px;
+      gap:min(52vw, 220px);
+    }
+    .rope{
+      height:24px;
     }
     .card{
-      padding:26px 22px;
-      border-radius:18px;
+      padding:28px 20px 24px;
+      border-radius:20px;
       width:100%;
     }
+    .card::before, .card::after, .card .bolt{
+      width:11px;
+      height:11px;
+    }
+    .card::before, .card::after{ top:11px; }
+    .card::before{ left:11px; }
+    .card::after{ right:11px; }
+    .card .bolt.bl{ bottom:11px; left:11px; }
+    .card .bolt.br{ bottom:11px; right:11px; }
     .card h1{
-      margin-bottom:22px;
+      margin-bottom:6px;
+      font-size:clamp(20px, 6.6vw, 27px);
+      line-height:1.25;
+    }
+    .card .subtitle{
+      margin:0 0 18px 0;
+      font-size:12.5px;
+    }
+    .barn{
+      width:46px;
+      height:40px;
+      bottom:12%;
+      left:3%;
+    }
+    .barn-roof{
+      border-left-width:25px;
+      border-right-width:25px;
+      border-bottom-width:17px;
+      left:-2px;
     }
     .dodge-zone{
-      min-height:190px;
+      min-height:clamp(130px, 42vh, 190px);
     }
     .btn-row{
-      gap:18px;
-      min-height:60px;
+      gap:16px;
+      min-height:56px;
     }
     button{
       font-size:17px;
-      padding:12px 26px;
+      padding:13px 24px;
       border-radius:12px;
+      min-height:48px;
     }
     .sun-wrap{
-      width:56px;
-      height:56px;
-      top:4%;
-      right:6%;
+      width:48px;
+      height:48px;
+      top:3%;
+      right:5%;
     }
     .fence{
-      height:32px;
+      height:28px;
     }
     .fence-post{
       width:6px;
-      height:28px;
+      height:24px;
     }
     .cow{
-      width:78px;
+      width:70px;
     }
     .popup{
-      padding:30px 28px;
-      max-width:85vw;
+      padding:28px 26px;
+      max-width:88vw;
     }
     .popup p{
-      font-size:20px;
+      font-size:19px;
+    }
+    .popup .popup-icon{
+      font-size:40px;
     }
   }
 
+  @media (max-width: 420px){
+    .barn{ display:none; }
+  }
+
+  @media (max-width: 340px){
+    .card{ padding:22px 16px 20px; }
+    .card h1{ font-size:19px; }
+    button{ font-size:15px; padding:11px 18px; }
+  }
+
   @media (max-height: 480px) and (orientation: landscape){
-    body{ align-items:center; padding-bottom:0; }
+    body{ align-items:center; padding:10px; }
     .ropes{ display:none; }
-    .card{ padding:18px 24px; }
-    .card h1{ margin-bottom:14px; font-size:20px; }
-    .dodge-zone{ min-height:100px; }
+    .card{ padding:16px 22px; }
+    .card h1{ margin-bottom:12px; font-size:19px; }
+    .dodge-zone{ min-height:90px; }
+    .sun-wrap{ width:40px; height:40px; }
   }
 </style>
 </head>
@@ -518,6 +613,10 @@
   <div id="scene">
     <div class="hill h1"></div>
     <div class="hill h2"></div>
+    <div class="barn">
+      <div class="barn-roof"></div>
+      <div class="barn-body"><div class="barn-door"></div></div>
+    </div>
   </div>
   <div class="fence" id="fence"></div>
 
@@ -526,6 +625,7 @@
     <div class="card">
       <span class="bolt bl"></span><span class="bolt br"></span>
       <h1>Dio é realmente <span>gado</span>?</h1>
+      <p class="subtitle">🐄 Só clique se aguentar a resposta...</p>
       <div class="dodge-zone" id="dodgeZone">
         <div class="btn-row">
           <button id="simBtn">🌾 Sim</button>
